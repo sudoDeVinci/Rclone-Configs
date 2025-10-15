@@ -1,9 +1,8 @@
 # How to Set Up Google Drive with Rclone
 
 ## Step 1: Install Rclone on Your Ugreen NAS
-
+SSH into your NAS then:
 ```bash
-# SSH into your NAS, then:
 sudo apt-get update
 sudo apt-get install rclone
 ```
@@ -33,7 +32,7 @@ Type: **n** and press Enter
 Enter name for new remote.
 name> gdrive
 ```
-Type: **gdrive** (or any name you prefer) and press Enter
+Type: Whatever name you prefer. For this tutorial we'll use **"gdrive"** and press Enter.
 
 ### 3.3 Choose Storage Type
 ```
@@ -45,6 +44,9 @@ Choose a number from below, or type in your own value.
 ...
 Storage> 22
 ```
+The choice for Google Drive will either be 18 or 22 depending on the rclone version.
+For this tutorial, it'll be 22.
+
 Type: **22** (the number for Google Drive) and press Enter
 
 ### 3.4 Google Application Client ID
@@ -65,7 +67,7 @@ Leave blank normally.
 Enter a value. Press Enter to leave empty.
 client_secret>
 ```
-Press **Enter** (leave blank)
+I recommend adding this. Press **Enter**
 
 ### 3.6 Scope
 ```
@@ -130,7 +132,7 @@ a web browser available.
 For more help and alternate methods see: https://rclone.org/remote_setup/
 Execute the following on the machine with the web browser (same rclone
 version recommended):
-	rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0"
+	rclone authorize "drive" "eyJzY29wZSI6ImRyaXZlIn0..."
 Then paste the result.
 Enter a value.
 config_token>
@@ -218,30 +220,20 @@ rclone lsd gdrive:MyFolder
 
 ## Step 5: Update Your Script
 
-Now edit `rclonetest.sh` and set:
+Now edit `sync.sh` and set:
 
 ```bash
-RCLONE_REMOTE="gdrive:"              # For entire Google Drive
+RCLONE_REMOTE="gdrive:"              # EntireGoogle Drive
 # OR
-RCLONE_REMOTE="gdrive:MyFolder"      # For a specific folder
+RCLONE_REMOTE="gdrive:MyFolder"      # Specific subdir
 ```
 
 ## Troubleshooting
 
-### If you get "command not found" for rclone config:
-```bash
-# Check if rclone is installed
-which rclone
-
-# If not found, install it:
-sudo apt-get install rclone
-# OR download latest version:
-curl https://rclone.org/install.sh | sudo bash
 ```
 
 ### If authorization fails:
 - Make sure you copied the ENTIRE URL (it's very long)
-- Use incognito/private browsing mode
 - Try a different browser
 - Check that you're logged into the correct Google account
 
@@ -264,4 +256,3 @@ rclone tree gdrive:
 rclone sync gdrive: /path/to/local --dry-run -v
 ```
 
-Now you're ready to use the sync script!

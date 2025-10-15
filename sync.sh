@@ -7,10 +7,6 @@
 ## Think use-case: Pull remote backups to local storage
 ## Think use-case: Mirror cloud storage to local server
 
-## This is NOT a backup tool!
-## It will not help you if you delete your files or if they become corrupted.
-## If you need a backup tool, check out https://blog.rymcg.tech/blog/linux/restic_backup
-
 ## Setup: Install `rclone` from package manager (inotify-tools not needed).
 ## Run: `rclone config` to setup the remote, including the full remote
 ##   subdirectory path to sync FROM.
@@ -26,17 +22,23 @@
 ## Run: `journalctl --user --unit rclone_sync_from_remote` to view the logs.
 ## For desktop notifications, make sure you have installed a notification daemon (eg. dunst)
 
+# Check if we're already running the script
+if pgrep -f "rclonetest.sh" > /dev/null 2>&1; then
+    echo "Script already running. Exiting."
+    exit 0
+fi
+
 ## Edit the variables below, according to your own environment:
 
 # RCLONE_SYNC_PATH: The LOCAL path to sync TO (files FROM remote will be synced here):
-RCLONE_SYNC_PATH="/home/devinci/Desktop/gdrive/"
+RCLONE_SYNC_PATH=""
 
 # RCLONE_REMOTE: The rclone remote name to synchronize FROM.
 # Identical to one of the remote names listed via `rclone listremotes`.
 # Include the remote folder path after the colon, e.g., "gdrive:MyFolder"
 # (ALL CONTENTS of the local directory are continuously DELETED
 #  and replaced with the contents FROM RCLONE_REMOTE)
-RCLONE_REMOTE="gdrive:"
+RCLONE_REMOTE=""
 
 # RCLONE_CMD: The sync command and arguments:
 ## (This syncs FROM remote TO local - reversed from original script):
@@ -54,7 +56,7 @@ WATCH_EVENTS="modify,delete,create,move"
 SYNC_DELAY=5
 
 # SYNC_INTERVAL: Wait this many seconds between forced synchronizations:
-SYNC_INTERVAL=3600
+SYNC_INTERVAL=36000
 
 # NOTIFY_ENABLE: Enable Desktop notifications (set to false for NAS/headless servers)
 NOTIFY_ENABLE=false
@@ -82,7 +84,6 @@ rclone_sync() {
         # Check if there are changes using rclone check
         echo "Checking for remote changes..."
         if ! rclone check ${RCLONE_REMOTE} ${RCLONE_SYNC_PATH} --one-way --quiet 2>/dev/null; then
-            # Differences detected, sync the files:
             echo "Changes detected, syncing..."
             if ${RCLONE_CMD}; then
                 notify "Synchronized new changes from remote"
@@ -107,7 +108,7 @@ systemd_setup() {
     fi
     mkdir -p ${HOME}/.config/systemd/user
     
-    # Create a safe service name (remove special characters from remote name)
+    # Remove special characters from remote name
     SAFE_REMOTE_NAME=$(echo "${RCLONE_REMOTE}" | sed 's/[^a-zA-Z0-9_-]/_/g')
     SERVICE_FILE=${HOME}/.config/systemd/user/rclone_sync_from_${SAFE_REMOTE_NAME}.service
     
