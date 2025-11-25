@@ -6,11 +6,8 @@ NAS_HOST="192.168.1..."
 NAS_USER="..."
 
 VOLUME="/volume2"
-LOG_FILE="sync_keepalive.log"
-SCRIPT_FILE="sync.sh"
-MANAGER_FILE="keepalive.sh"
+LOG_FILE="clonetask.log"
 LOG_PATH="${VOLUME}/${LOG_FILE}"
-SCRIPT_PATH="${VOLUME}/${SCRIPT_FILE}"
 
 
 # RCLONE_SYNC_PATH: The LOCAL path to sync TO (files FROM remote will be synced here):
