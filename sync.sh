@@ -24,12 +24,6 @@
 
 source utils.sh
 
-# Check if we're already running the script
-if pgrep -f "$SCRIPT_FILE" > /dev/null 2>&1; then
-    echo "Sync Script already running. Exiting."
-    exit 0
-fi
-
 # RCLONE_CMD: The sync command and arguments:
 ## (This syncs FROM remote TO local - reversed from original script):
 ## (Consider using other modes like `bisync` for two-way sync [see `man rclone` for details]):
@@ -53,6 +47,15 @@ notify() {
 
 rclone_sync() {
     set -x
+    # Verify required variables
+    if [[ -z "${RCLONE_REMOTE}" ]]; then
+        echo "ERROR: RCLONE_REMOTE is not set. Cannot sync."
+        exit 1
+    fi
+    if [[ -z "${RCLONE_SYNC_PATH}" ]]; then
+        echo "ERROR: RCLONE_SYNC_PATH is not set. Cannot sync."
+        exit 1
+    fi
     # Do initial sync immediately:
     notify "Startup - syncing from remote"
     ${RCLONE_CMD}
@@ -115,7 +118,10 @@ EOF
     echo "   journalctl --user --unit rclone_sync_from_${SAFE_REMOTE_NAME} -f"
 }
 
-if test $# = 0; then
+# If running inside Docker, skip arg parsing and run sync directly
+if [[ -f /.dockerenv ]] || [[ "${DOCKERIZED}" == "true" ]]; then
+    rclone_sync
+elif test $# = 0; then
     rclone_sync
 else
     CMD=$1; shift;

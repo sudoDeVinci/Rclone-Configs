@@ -1,0 +1,14 @@
+services:
+  rclone-sync:
+    build: .
+    container_name: rclone-gdrive-sync
+    restart: unless-stopped
+    environment:
+      - "RCLONE_REMOTE=gdrive:"
+      - "RCLONE_SYNC_PATH=/sync"
+      - "POLL_INTERVAL=60"
+    volumes:
+      # Mount your rclone config directory (contains rclone.conf)
+      - /root/.config/rclone:/config:ro
+      # Mount the local directory where Google Drive contents will be synced
+      - /volume2/NAS_GoogleHYGP:/sync

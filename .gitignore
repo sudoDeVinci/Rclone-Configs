@@ -1,0 +1,11 @@
+# rclone config (contains OAuth tokens / credentials)
+rclone.conf
+**/rclone.conf
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+sync_keepalive.log

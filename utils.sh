@@ -11,18 +11,18 @@ LOG_PATH="${VOLUME}/${LOG_FILE}"
 
 
 # RCLONE_SYNC_PATH: The LOCAL path to sync TO (files FROM remote will be synced here):
-RCLONE_SYNC_PATH="${VOLUME}/..."
+RCLONE_SYNC_PATH="${RCLONE_SYNC_PATH:-${VOLUME}/...}"
 
 # RCLONE_REMOTE: The rclone remote name to synchronize FROM.
 # Identical to one of the remote names listed via `rclone listremotes`.
 # Include the remote folder path after the colon, e.g., "gdrive:MyFolder"
 # (ALL CONTENTS of the local directory are continuously DELETED
 #  and replaced with the contents FROM RCLONE_REMOTE)
-RCLONE_REMOTE="..."
+RCLONE_REMOTE="${RCLONE_REMOTE:-...}"
 
 # POLL_INTERVAL: How often to check for remote changes (in seconds):
 # Set lower for more responsive syncing, higher to reduce API calls
-POLL_INTERVAL=60
+POLL_INTERVAL="${POLL_INTERVAL:-60}"
 
 # SYNC_DELAY: Wait this many seconds after an event, before synchronizing:
 SYNC_DELAY=5
