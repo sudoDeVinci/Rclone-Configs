@@ -2,8 +2,8 @@
 
 ## Edit the variables below, according to your own environment:
 #
-NAS_HOST="192.168.1..."
-NAS_USER="..."
+NAS_HOST="192.168.1.137"
+NAS_USER="HYGP_ADMIN"
 
 VOLUME="/volume2"
 LOG_FILE="clonetask.log"
@@ -11,14 +11,14 @@ LOG_PATH="${VOLUME}/${LOG_FILE}"
 
 
 # RCLONE_SYNC_PATH: The LOCAL path to sync TO (files FROM remote will be synced here):
-RCLONE_SYNC_PATH="${RCLONE_SYNC_PATH:-${VOLUME}/...}"
+RCLONE_SYNC_PATH="${RCLONE_SYNC_PATH:-${VOLUME}/NAS_GoogleHYGP}"
 
 # RCLONE_REMOTE: The rclone remote name to synchronize FROM.
 # Identical to one of the remote names listed via `rclone listremotes`.
 # Include the remote folder path after the colon, e.g., "gdrive:MyFolder"
 # (ALL CONTENTS of the local directory are continuously DELETED
 #  and replaced with the contents FROM RCLONE_REMOTE)
-RCLONE_REMOTE="${RCLONE_REMOTE:-...}"
+RCLONE_REMOTE="${RCLONE_REMOTE:-gdrive:}"
 
 # POLL_INTERVAL: How often to check for remote changes (in seconds):
 # Set lower for more responsive syncing, higher to reduce API calls
